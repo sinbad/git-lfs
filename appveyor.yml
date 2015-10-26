@@ -1,0 +1,32 @@
+os: Windows Server 2012
+
+init:
+  - git config --global core.autocrlf true
+  - mkdir %GIT_LFS_TEST_DIR%
+  - mkdir %BASHROOT%
+  - cd %BASHROOT%
+  - curl -LOk https://github.com/git-for-windows/git/releases/download/v2.6.2.windows.1/PortableGit-2.6.2-64-bit.7z.exe
+  - 7z x PortableGit-2.6.2-64-bit.7z.exe > nul
+  - mkdir c:\go15
+  - cd c:\go15
+  - curl -LO https://storage.googleapis.com/golang/go1.5.1.windows-amd64.zip
+  - unzip -o go1.5.1.windows-amd64.zip > nul
+  - set PATH=%BASHROOT%\bin;c:\go15\bin;%PATH%
+  - cd %REPOROOT%
+
+clone_folder: c:\gopath\src\github.com\github\git-lfs
+
+environment:
+  GOPATH: c:\gopath
+  GIT_LFS_TEST_DIR: c:\temp\git-lfs-test
+  BASHROOT: c:\bash
+  REPOROOT: c:\gopath\src\github.com\github\git-lfs
+
+# disable auto build/test
+build: off
+test: off
+
+test_script:
+  - bash --version
+  - bash script\cibuild
+
