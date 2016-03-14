@@ -82,6 +82,10 @@ begin_test "cloneSSL"
 (
   set -e
 
+  echo "Cert file is: $LFS_CERT_FILE"
+  git config http.sslcainfo
+  ls -la $LFS_CERT_FILE
+
   reponame="test-cloneSSL"
   setup_remote_repo "$reponame"
   clone_repo_ssl "$reponame" "$reponame"
