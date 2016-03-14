@@ -83,6 +83,9 @@ func main() {
 	block.Type = "CERTIFICATE"
 	block.Bytes = serverTLS.TLS.Certificates[0].Certificate[0]
 	pembytes := pem.EncodeToMemory(block)
+	fmt.Println("TEST Cert count: ", len(serverTLS.TLS.Certificates))
+	fmt.Println("TEST Cert Nested count: ", len(serverTLS.TLS.Certificates[0].Certificate))
+	fmt.Println("TEST Cert data:", string(pembytes))
 	certname := writeTestStateFile(pembytes, "LFSTEST_CERT", "lfstest-gitserver-cert")
 	defer os.RemoveAll(certname)
 
