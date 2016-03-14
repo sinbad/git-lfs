@@ -4,6 +4,7 @@ import (
 	"crypto/x509"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/github/git-lfs/vendor/_nuts/github.com/rubyist/tracerx"
@@ -31,24 +32,29 @@ func appendRootCAsForHostFromGitconfig(pool *x509.CertPool, host string) *x509.C
 
 	// GIT_SSL_CAINFO first
 	if cafile, ok := Config.envVars["GIT_SSL_CAINFO"]; ok {
+		fmt.Fprintln(os.Stderr, "TEST - RootCAs added from GIT_SSL_CAINFO:", cafile)
 		return appendCertsFromFile(pool, cafile)
 	}
 	// http.<url>.sslcainfo
 	// we know we have simply "host" or "host:port"
 	key := fmt.Sprintf("http.https://%v/.sslcainfo", host)
 	if cafile, ok := Config.GitConfig(key); ok {
+		fmt.Fprintln(os.Stderr, "TEST - RootCAs added from http.<url>.sslcainfo:", cafile)
 		return appendCertsFromFile(pool, cafile)
 	}
 	// http.sslcainfo
 	if cafile, ok := Config.GitConfig("http.sslcainfo"); ok {
+		fmt.Fprintln(os.Stderr, "TEST - RootCAs added from http.sslcainfo:", cafile)
 		return appendCertsFromFile(pool, cafile)
 	}
 	// GIT_SSL_CAPATH
 	if cadir, ok := Config.envVars["GIT_SSL_CAPATH"]; ok {
+		fmt.Fprintln(os.Stderr, "TEST - RootCAs added from GIT_SSL_CAPATH:", cadir)
 		return appendCertsFromFilesInDir(pool, cadir)
 	}
 	// http.sslcapath
 	if cadir, ok := Config.GitConfig("http.sslcapath"); ok {
+		fmt.Fprintln(os.Stderr, "TEST - RootCAs added from http.sslcapath:", cadir)
 		return appendCertsFromFilesInDir(pool, cadir)
 	}
 
